@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>AJAX 4 Ways Exercise</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <h1>Ron Swanson Quote Generator</h1>
+  <p>(4 ways of writing AJAX requests)</p>
+  <section class="container">
+    <button id="xhr">XHR</button>
+    <button id="fetch">Fetch</button>
+    <button id="jquery">jQuery</button>
+    <button id="axios">Axios</button>
+  </section>
+  <p id="quote">Quote Goes Here...</p>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+var url = 'https://ron-swanson-quotes.herokuapp.com/v2/quotes';
+
+var xhrBtn = document.querySelector('#xhr');
+var fetchBtn = document.querySelector('#fetch');
+var jqueryBtn = document.querySelector('#jquery');
+var axiosBtn = document.querySelector('#axios');
+
+xhrBtn.addEventListener('click', xhrRequest);
+fetchBtn.addEventListener('click', fetchRequest);
+jqueryBtn.addEventListener('click', jqueryRequest);
+axiosBtn.addEventListener('click', axiosRequest);
+
+// XMLHttpRequest
+
+function xhrRequest() {
+  var XHR = new XMLHttpRequest();
+  XHR.onreadystatechange = () => {
+    if(XHR.readyState == 4 && XHR.status == 200) {
+      var xhrQuote = JSON.parse(XHR.responseText);
+quote.innerText = xhrQuote;
+    }
+  };
+  XHR.open('GET', url);
+  XHR.send();
+}
+
+// Fetch API
+
+function fetchRequest() {
+  fetch(url)
+  .then(function(response) {
+    return response.json();
+  })
+  .then(function(data) {
+    console.log(data);
+    quote.innerText = data;
+  })
+  .catch(function(error) {
+    console.log(error);
+  });
+}
+
+// jQuery getJSON
+
+function jqueryRequest() {
+  $.getJSON(
+    url,
+    (data) => $('#quote').text(data)
+  );
+}
+
+// Axios
+
+function axiosRequest() {
+  axios(url)
+  .then(function(res) {
+    quote.innerText = res.data;
+  })
+  .catch(function(error) {
+    console.log(error);
+  })
+}
+</script>
+
+</body>
+</html>
